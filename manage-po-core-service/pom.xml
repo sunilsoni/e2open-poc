@@ -15,7 +15,7 @@
 	</parent>
 
     <properties>
-        <start-class>rest.core.ManagePOCoreServiceApplication</start-class>
+        <start-class>com.jci.ManagePOCoreServiceApplication</start-class>
     </properties>
 
     <dependencies>
@@ -31,9 +31,62 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-client</artifactId>
         </dependency>
+        
+         <!-- Sunil -->
+         <dependency>
+			<!-- Setup Spring Data common components -->
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- Testing starter -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+         <dependency>
+			<!-- Setup Spring Data JPA Repository support -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+       <!--  <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901-1.jdbc4</version>
+        </dependency> -->
+        	<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>9.4.1208.jre7</version>
+			</dependency>
+			
+			
+         <dependency>
+            <groupId>com.jci</groupId>
+            <artifactId>openedge</artifactId>
+            <version>11.6</version>
+        </dependency>
+         <!-- <dependency>
+            <groupId>com.jci</groupId>
+            <artifactId>jfilehelpers</artifactId>
+            <version>0.3</version>
+        </dependency> -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>org.apache.commons</groupId> 
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+        
+        
     </dependencies>
-    <build>
+    <build> <pluginManagement>
         <plugins>
+       
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
@@ -50,6 +103,51 @@
                     </resources>
                 </configuration>
             </plugin>
-        </plugins>
+            
+            <!-- <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>generate-ddl-create</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                ANT Task definition
+                                <java classname="com.orange.tools.jpa.JpaSchemaExport"
+                                    fork="true" failonerror="true">
+                                    <arg value="${persistenceUnitName}" />
+                                    <arg value="target/jpa/sql/schema-create.sql" />
+                                    reference to the passed-in classpath reference
+                                    <classpath refid="maven.compile.classpath" />
+                                </java>
+                            </target>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin> -->
+            <plugin>
+			    <groupId>de.juplo</groupId>
+			    <artifactId>hibernate4-maven-plugin</artifactId>
+			    <version>1.0.4</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>export</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			    <configuration>
+			        <hibernateDialect>org.hibernate.dialect.PostgreSQL82Dialect</hibernateDialect>
+			        <target>NONE</target>
+			        <type>CREATE</type>
+			    </configuration>
+			</plugin>
+            
+        </plugins></pluginManagement>
     </build>
 </project>
