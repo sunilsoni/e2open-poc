@@ -10,6 +10,7 @@ import com.jci.domain.PO;
 import com.jci.domain.PoDiv;
 import com.jci.domain.PoItem;
 import com.jci.domain.ShipTo;
+import com.jci.domain.VendAddr;
 import com.jci.domain.Vendor;
 import com.jci.domain.VendorDiv;
 
@@ -1196,6 +1197,48 @@ public class PrepareQueryData {
 			itemDiv.setZzDatefld6Div(CommonUtils.stringToDate(String.valueOf( row.get("zz-Datefld6-div"))));
 	 	}
 		return itemDiv;
+	}
+
+	
+	public static VendAddr prepareVendAddrData(Map<String, Object> row) {
+
+		VendAddr vendAddr = new VendAddr();
+		if((row.get("vend-num")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("vend-num"))))){
+			vendAddr.setVendNum(Integer.parseInt(String.valueOf( row.get("vend-num"))));
+	 	}
+		
+		if((row.get("address-1")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("address-1"))))){
+			vendAddr.setAddress1((String.valueOf( row.get("address-1"))));
+	 	}
+		
+		if((row.get("address-2")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("address-2"))))){
+			vendAddr.setAddress2((String.valueOf( row.get("address-2"))));
+	 	}
+		if((row.get("city")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("city"))))){
+			vendAddr.setCity((String.valueOf( row.get("city"))));
+	 	}
+		if((row.get("country")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("country"))))){
+			vendAddr.setCountry((String.valueOf( row.get("country"))));
+	 	}
+		if((row.get("county")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("county"))))){
+			vendAddr.setCounty((String.valueOf( row.get("county"))));
+	 	}
+		if((row.get("fax-num")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("fax-num"))))){
+			vendAddr.setFaxNum((String.valueOf( row.get("fax-num"))));
+	 	}
+		if((row.get("name")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("name"))))){
+			vendAddr.setName((String.valueOf( row.get("name"))));
+	 	}
+		if((row.get("state")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("state"))))){
+			vendAddr.setState((String.valueOf( row.get("state"))));
+	 	}
+		if((row.get("telex-num")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("telex-num"))))){
+			vendAddr.setTelexNum((String.valueOf( row.get("telex-num"))));
+	 	}
+		if((row.get("zip")!=null) && (! StringUtils.isBlank(String.valueOf (row.get("zip"))))){
+			vendAddr.setZip((String.valueOf( row.get("zip"))));
+	 	}
+		return vendAddr;
 	}
 
 

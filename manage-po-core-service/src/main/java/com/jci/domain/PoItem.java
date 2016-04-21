@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -17,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "PO_ITEM")
@@ -38,11 +40,16 @@ public class PoItem implements Serializable {
 	@OneToOne(fetch=FetchType.EAGER, mappedBy="poItem")
     private PO po;
 	
-	@JsonBackReference
+	/*@JsonBackReference
 	//bi_directional one_to_one association to itemKey
 	@OneToOne(fetch=FetchType.EAGER, mappedBy="poItemKey",cascade=CascadeType.ALL)
-	private Item itemKey;
+	private Item itemKey;*/
 		
+	@JsonManagedReference
+	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinColumn(name="ITEM_ID")
+	private Item itemKey;
+	
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_MOD_TIME")
 	private Date updated; 

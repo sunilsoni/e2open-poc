@@ -19,6 +19,7 @@ com\jci\domain\PoDiv.class
 com\jci\domain\ShipTo.class
 com\jci\domain\Item.class
 com\jci\model\ManagePOCollectionResponse.class
+com\jci\domain\VendAddr.class
 com\jci\MultiDatasourceApplicationConfig.class
 com\jci\controller\POController$1.class
 com\jci\model\request\PullPoDataRequest.class

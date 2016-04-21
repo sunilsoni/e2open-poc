@@ -8,6 +8,7 @@ public class PoNumDataResponse {
 	private List<String> lines;
 	private String errorMsg;
 	private String fileName;
+	private Integer poNum;
 	
 	public boolean isError() {
 		return isError;
@@ -33,11 +34,22 @@ public class PoNumDataResponse {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	public Integer getPoNum() {
+		return poNum;
+	}
+	public void setPoNum(Integer poNum) {
+		this.poNum = poNum;
+	}
+	
+	
 	@Override
 	public String toString() {
-		return "ProcessPoDataResponse [isError=" + isError + ", lines=" + lines + ", errorMsg=" + errorMsg
-				+ ", fileName=" + fileName + "]";
+		return "PoNumDataResponse [isError=" + isError + ", lines=" + lines + ", errorMsg=" + errorMsg + ", fileName="
+				+ fileName + ", poNum=" + poNum + "]";
 	}
+
+
+	
 	
 	 
 	

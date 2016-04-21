@@ -38,6 +38,7 @@ import com.jci.domain.PO;
 import com.jci.domain.PoDiv;
 import com.jci.domain.PoItem;
 import com.jci.domain.ShipTo;
+import com.jci.domain.VendAddr;
 import com.jci.domain.Vendor;
 import com.jci.domain.VendorDiv;
 import com.jci.model.request.FlatFileRequest;
@@ -117,6 +118,8 @@ public class POController {
     	
 	@RequestMapping(value = "/getPoNumData", method = RequestMethod.POST, headers = "Accept=application/json")
     public  PoNumDataResponse getPoNumData(@RequestBody FlatFileRequest request){
+		
+		//getAndSaveSymixData("2013-05-03");
 		System.out.println(" Starting processPoData(core)--->"+request);
 		PoNumDataResponse res = new PoNumDataResponse();
 		
@@ -131,6 +134,8 @@ public class POController {
     	if(poIdsSize>0){
     		List<PO> poList = poRepository.findByPoNumIn(poNums);
     		int poListSize = (poList == null) ? 0 : poList.size();
+    		System.out.println("poListSize--->"+poListSize);
+    		
     		if(poListSize==0){
         		res.setErrorMsg("Data is not available for the give PO numbers!");
         	}
@@ -139,147 +144,23 @@ public class POController {
     			try{
     				List<String> lines =  CommonUtils.fixedLengthString(poList);
             		res.setLines(lines);
+            		
+            		//For now we are assuming that we will get only one po from UI to generate only one file at a time
+            		System.out.println("poNums.get(0)--->"+poNums.get(0));
+            		res.setPoNum(poNums.get(0));
             		res.setFileName(CommonUtils.getFileName(poNums.get(0)));            		
     			}catch(Exception e){
     				res.setError(true);
+    				e.printStackTrace();
     			}
     		}
     	}
-    	System.out.println(" Ending processPoData(core)--->"+request);
+    	System.out.println(" Ending processPoData(core)--->"+res);
 		return res;
     }
     
     
 
-    @RequestMapping(value="/file", method=RequestMethod.GET)
-    public void getDownload(@RequestParam HashMap<String, Object> allRequestParams, HttpServletResponse response) {
-    	String dateStr = null;
-    	int allRequestParamsSize = (allRequestParams == null) ? 0 : allRequestParams.size();
-    	if (allRequestParamsSize > 0){
-    		dateStr = (String) allRequestParams.get("dateStr");
-        }
-    	
-    	dateStr = "2013-05-03";//For now using hard coded
-    	
-    	int noOfRows = getAndSaveSymixData(dateStr);
-    	System.out.println("noOfRows---->"+ noOfRows);
-    	
-    	
-    	File file = new File("C:/Users/csonisk/Desktop/Docs/apigee/DB/flat-files/006092860_006092860_DiscreteOrderDownload_1.0_5068_20160321070044928.txt");
-    	
-    	System.out.println("file-->"+file.getAbsolutePath());
-    	
-    	// Get your file stream from wherever.
-    	//InputStream myStream = someClass.returnFile();
-    	 
-    	InputStream is;
-		try {
-			String mimeType= URLConnection.guessContentTypeFromName(file.getName());
-			System.out.println("mimeType--->"+mimeType);
-			
-			response.setContentType(mimeType);
-			response.setContentLength((int)file.length());
-			response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() +"\""));
-			 
-			is = new FileInputStream(file);
-			//IOUtils.copy(is, response.getOutputStream());
-
-			//Copy bytes from source to destination(outputstream in this example), closes both streams.
-	        FileCopyUtils.copy(is, response.getOutputStream());
-	        
-	        
-	    	response.flushBuffer();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	System.out.println("Characters printed:");
-        
-
-    	// Set the content type and attachment header.
-    	//response.addHeader("Content-disposition", "attachment;filename=myfilename.txt");
-    	response.setContentType("txt/plain");
-
-    	// Copy the stream to the response's output stream.
-    	
-    }
-    
-    @RequestMapping(value = "getFlatFiles", method = RequestMethod.POST)
-    public  void getFlatFiles(@RequestBody FlatFileRequest request,  HttpServletResponse response)
-    {
-    	System.out.println("request--->"+request);
-    	
-    	/**
-    	 * for now please send only one PO number from UI else it will not create new Flat File for different-2 PO numbers.
-    	 */
-    	List<Integer> poIds =  request.getPoNums();
-    	int poIdsSize = (poIds == null) ? 0 : poIds.size();
-    	System.out.println("poIdsSize--->"+poIdsSize);
-    	
-
-		/*final Iterable<PO> all = poRepository.findByIdIn(poIds);
-        all.forEach(new Consumer<PO>() {
-            @Override
-            public void accept(PO po) {
-            	pos.add(po);
-            	CommonUtils.fixedLengthString(po);
-            }
-        });*/
-    	
-    	if(poIdsSize>0){
-    		List<PO> pos = new ArrayList<PO>();
-    		
-    		List<PO> poList = poRepository.findByPoNumIn(poIds);
-    		System.out.println("poList--->"+poList);  
-    		int poListSize = (poList == null) ? 0 : poList.size();
-    		 
-    		if(poListSize>0){
-    			// List<String> lines = Arrays.asList("The first line", "The second line");
-        		List<String> lines =  CommonUtils.fixedLengthString(poList);
-        		 
-        		String fileName = CommonUtils.getFileName(poIds.get(0));
-        		System.out.println("fileName--->"+fileName);  
-        		
-        		Path file = Paths.get(fileName);
-        	    try {
-    				Files.write(file, lines, Charset.forName("UTF-8"));
-    				//Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-        	    
-        	    File toFile = file.toFile();
-                System.out.println("pos--->"+pos);  
-                String mimeType= URLConnection.guessContentTypeFromName(toFile.getName());
-                response.setContentType(mimeType);
-    			response.setContentLength((int)toFile.length());
-    			response.setHeader("Content-Disposition", String.format("inline; filename=\"" + fileName +"\""));
-    			response.setContentType("txt/plain");
-    			
-    			InputStream is=null;
-    			try {
-    				is = new FileInputStream(toFile);
-    			} catch (FileNotFoundException e1) {
-    				e1.printStackTrace();
-    			}
-    			//IOUtils.copy(is, response.getOutputStream());
-    			//Copy bytes from source to destination(outputstream ), closes both streams.
-    	        try {
-    				FileCopyUtils.copy(is, response.getOutputStream());
-    				 response.flushBuffer();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-    		}
-    		
-	        System.out.println(" #### Ending  ####");  
-    	}
-    }
-    
-    
-    
-    
     
   private int getAndSaveSymixData(String dateStr){
     	Date date = CommonUtils.stringToDate(dateStr);
@@ -313,6 +194,10 @@ public class POController {
          	   
          	   ItemDiv itemDiv = PrepareQueryData.prepareItemDivData(row); 
          	   item.setItemDiv(itemDiv);
+         	   
+         	   VendAddr vendAddr = PrepareQueryData.prepareVendAddrData(row); 
+        	   vendor.setVendAddr(vendAddr);
+        	   
          	   poRepository.save(po);
         	}
         }catch(Exception e){

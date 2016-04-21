@@ -39,6 +39,11 @@ public class Vendor implements Serializable {
 	@JoinColumn(name="VENDOR_DIV_ID")
 	private VendorDiv vendorDiv;
 	
+	@JsonManagedReference
+	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinColumn(name="VENDOR_ADDR_ID")
+	private VendAddr vendAddr;
+	
 	@JsonBackReference
 	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL, mappedBy="vendor")
 	@JoinColumn(name="PO_ID")
@@ -396,6 +401,24 @@ public class Vendor implements Serializable {
 
 	public void setPo(PO po) {
 		this.po = po;
+	}
+
+	 
+
+	public VendAddr getVendAddr() {
+		return vendAddr;
+	}
+
+	public void setVendAddr(VendAddr vendAddr) {
+		this.vendAddr = vendAddr;
+	}
+
+	public Date getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Date updated) {
+		this.updated = updated;
 	}
 
 	@Override

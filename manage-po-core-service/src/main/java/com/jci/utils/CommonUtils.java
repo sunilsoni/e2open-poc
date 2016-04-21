@@ -10,9 +10,12 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.jci.domain.Item;
 import com.jci.domain.PO;
 import com.jci.domain.PoItem;
 import com.jci.domain.ShipTo;
+import com.jci.domain.VendAddr;
+import com.jci.domain.Vendor;
 import com.jci.model.PoDetails;
 import com.jci.model.response.PullPoDataResponse;
 
@@ -89,13 +92,13 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab("AddressLine5"));
 			
 			
-			ShipTo shipTo = po.getShipTo();
+			//ShipTo shipTo = po.getShipTo();
 			
 			//16: Customer City
 			line.append(appendTab("Milwaukee"));
 			
 			//17: Customer County
-			line.append(appendTab(shipTo.getCounty()));
+			line.append(appendTab(null));
 			
 			//18: Customer State
 			line.append(appendTab("WI"));
@@ -106,11 +109,14 @@ public static Date stringToDate(String dateStr){
 			//20: Customer Zip
 			line.append(appendTab("53201"));
 			
-			//21: Supplier ID
-			line.append(appendTab(po.getVendNum()));
 			
+			Vendor vendor = po.getVendor();
+			//21: Supplier ID
+			line.append(appendTab(vendor.getVendNum()));
+			
+			VendAddr vendAddr = vendor.getVendAddr();
 			//22: Supplier Description
-			line.append(appendTab(null));
+			line.append(appendTab(vendAddr.getName()));
 			
 			//23: Supplier DUNS
 			line.append(appendTab(null));
@@ -123,49 +129,50 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab("SH-DOYEN Office"));
 			
 			//26: Supplier Address 1
-			line.append(appendTab("Floor 7th, Building A"));
+			line.append(appendTab(vendAddr.getAddress1()));
 			
 			//27: Supplier Address 2
-			line.append(appendTab("No. 285 Changshou Road"));
+			line.append(appendTab(vendAddr.getAddress2()));
 			
 			//28: Supplier Address 3
-			line.append(appendTab("Shanghai, China"));
+			line.append(appendTab(null));
 			
 			//29: Supplier Address 4
-			line.append(appendTab("AddressLine4"));
+			line.append(appendTab(null));
 			
 			//30: Supplier Address 5
-			line.append(appendTab("AddressLine5"));
+			line.append(appendTab(null));
 			
 			//31: Supplier City
-			line.append(appendTab("Shanghai"));
+			line.append(appendTab(vendAddr.getCity()));
 			
 			//32: Supplier County
 			line.append(appendTab(null));
 			
 			//33: Supplier State
-			line.append(appendTab("Shanghai"));
+			line.append(appendTab(vendAddr.getState()));
 			
 			//34: Supplier Country
-			line.append(appendTab("China"));
+			line.append(appendTab(vendAddr.getCounty()+" "+vendAddr.getCountry()));
 			
 			//35: Supplier Zip
-			line.append(appendTab("200001"));
+			line.append(appendTab(vendAddr.getZip()));
 			
 			//36: Buyer Code
 			line.append(appendTab("BuyerCode01"));
 			
+			ShipTo  shipTo = po.getShipTo();
 			//37: Buyer Contact
-			line.append(appendTab("BuyerContact01"));
+			line.append(appendTab(shipTo.getContact()));
 			
 			//38: Buyer Name
 			line.append(appendTab(po.getBuyer()));
 			
 			//39: Buyer Email
-			line.append(appendTab("buyer01@jci.com"));
+			line.append(appendTab(null));
 			
 			//40: Supplier Email
-			line.append(appendTab("supplier01@doyen.com.cn"));
+			line.append(appendTab(null));
 			
 			//41: Delivery Term
 			line.append(appendTab(po.getShipCode()));
@@ -192,37 +199,37 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab("JCI"));
 			
 			//48: Bill To Address - Descriptor
-			line.append(appendTab("Milwaukee Financial"));
+			line.append(appendTab(shipTo.getName()));
 			
 			//49: Bill To Address 1
-			line.append(appendTab("5757 N. Green Bay Avenue"));
+			line.append(appendTab(shipTo.getAddress1()));
 			
 			//50: Bill To Address 2
-			line.append(appendTab("P.O. Box 591"));
+			line.append(appendTab(shipTo.getAddress2()));
 			
 			//51: Bill To Address 3
-			line.append(appendTab("Milwaukee, WI 53201"));
+			line.append(appendTab(null));
 			
 			//52: Bill To Address 4
-			line.append(appendTab("AddressLine4"));
+			line.append(appendTab(null));
 			
 			//53: Bill To Address 5
-			line.append(appendTab("AddressLine5"));
+			line.append(appendTab(null));
 			
 			//54: Bill To City
-			line.append(appendTab("Milwaukee"));
+			line.append(appendTab(shipTo.getCity()));
 			
 			//55: Bill To County
 			line.append(appendTab(null));
 			
 			//56: Bill To State
-			line.append(appendTab("Wisconsin"));
+			line.append(appendTab(shipTo.getState()));
 			
 			//57: Bill To Country
-			line.append(appendTab("United States"));
+			line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
 			
 			//58: Bill To Zip
-			line.append(appendTab("5757"));
+			line.append(appendTab(shipTo.getZip()));
 			
 
 			//59: Remit To Address - Descriptor
@@ -340,9 +347,11 @@ public static Date stringToDate(String dateStr){
 			//96: Customer Item ID
 			line.append(appendTab(poItem.getItem()));
 			
-			//97: Customer Item Description
-			line.append(appendTab(null));
+			Item item = poItem.getItemKey();
+			System.out.println("item-->"+item);
 			
+			//97: Customer Item Description
+			line.append(appendTab(item.getDescription()));
 			
 			//98: Supplier Item ID
 			line.append(appendTab(poItem.getVendItem()));
@@ -375,10 +384,10 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab(null));
 			
 			//109: Drawing Number
-			line.append(appendTab(null));
+			line.append(appendTab(item.getDrawingNbr()));
 			
 			//110: Item Category
-			line.append(appendTab(null));
+			line.append(appendTab(item.getProductCode()));
 			
 			//111: Ship To Location
 			line.append(appendTab(po.getDropShipNo()));
@@ -468,13 +477,13 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab(null));
 			
 			//140: Ship To Address - Descriptor
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getName()));
 			
 			//141: Ship To Address 1
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getAddress1()));
 			
 			//142: Ship To Address 2
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getAddress2()));
 			
 			//143: Ship To Address 3
 			line.append(appendTab(null));
@@ -486,20 +495,20 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab(null));
 			
 			//146: Ship To City
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getCity()));
 			
 			
 			//147: Ship To County
 			line.append(appendTab(null));
 			
 			//148: Ship To State
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getState()));
 			
 			//149: Ship To Country
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
 			
 			//150: Ship To Zip
-			line.append(appendTab(null));
+			line.append(appendTab(shipTo.getZip()));
 			
 			//151: Ref Order Type
 			line.append(appendTab(null));
@@ -721,58 +730,8 @@ public static Date stringToDate(String dateStr){
 			//222: 	Ship To Customer ID
 			line.append("");
 
-			/*line.append(appendTab(po.getBuyer()));
-			
-			line.append(appendTab(po.getDataSource()));
-			line.append(appendTab(po.getDropSeq()));
-			
-			line.append(appendTab(po.getDropShipNo()));
-			line.append(appendTab(po.getFob()));
-			line.append(appendTab(po.getInvNum()));
-			line.append(appendTab(po.getKey()));
-			
-			line.append(appendTab(po.getShipAddr()));
-			line.append(appendTab(po.getShipCode()));
-			
-			line.append(appendTab(po.getStatus()));
-
-			line.append(appendTab(po.getUpdated()));
-			
-			line.append(appendTab(po.getSalesTaxT()));
-			line.append(appendTab(po.getSalesTax()));*/
-
-			//line.append(po.getShipTo()));
-			//line.append(po.getVendor()));
-			//line.append(po.getPoItem()));
-			//line.append(po.getPoDiv()));
-			//line.append(appendTab(po.getId()));
-			
-			/*line.append(appendTab(po.getPoCost()));
-			
-			line.append(appendTab(po.getMiscCharges()));
-			line.append(appendTab(po.getmChargesT()));
-			line.append(appendTab(po.getInvDate()));
-			
-			line.append(appendTab(po.getFreightT()));
-			line.append(appendTab(po.getFreight()));
-			line.append(appendTab(po.getExpDate()));
-			line.append(appendTab(po.getEffDate()));
-			
-			line.append(appendTab(po.getDistDate()));
-			line.append(appendTab(po.getCreated()));
-			line.append(appendTab(po.getWhse()));
-			line.append(appendTab(po.getVendOrder()));
-			line.append(appendTab(po.getVendNum()));
-			line.append(appendTab(po.getType()));
-			
-			if(po.getTermsCode()==null || StringUtils.isBlank(String.valueOf (po.getTermsCode()))){
-				line.append("\t");
-			}else{
-				line.append(po.getTermsCode());
-			}*/
-			
 			lines.add(line.toString());
-			//System.out.println("line--->"+line);
+			System.out.println("line--->"+line);
 		 }
 		return lines;
 	}

@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -38,9 +39,14 @@ public class Item implements Serializable {
 	@JoinColumn(name="ITEM_DIV_ID")
 	private ItemDiv itemDiv;
 	
-	@JsonManagedReference
+	/*@JsonManagedReference
 	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
 	@JoinColumn(name="PO_ITEM_ID")
+	private PoItem poItemKey;*/
+	
+	@JsonBackReference
+	//bi_directional one_to_one association to itemKey
+	@OneToOne(fetch=FetchType.EAGER, mappedBy="itemKey",cascade=CascadeType.ALL)
 	private PoItem poItemKey;
 	
 	

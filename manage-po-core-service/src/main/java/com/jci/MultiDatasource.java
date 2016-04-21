@@ -20,10 +20,12 @@ import com.jci.domain.PO;
 import com.jci.domain.PoDiv;
 import com.jci.domain.PoItem;
 import com.jci.domain.ShipTo;
+import com.jci.domain.VendAddr;
 import com.jci.domain.Vendor;
 import com.jci.domain.VendorDiv;
 import com.jci.repository.PORepository;
 import com.jci.utils.CommonUtils;
+import com.jci.utils.Constants;
 import com.jci.utils.PrepareQueryData;
 
 @Component
@@ -42,19 +44,19 @@ public class MultiDatasource {
     @Qualifier("jdbcOpenedgeTemplate")
     private JdbcTemplate jdbcOpenedgeTemplate;
 
-  //  @Scheduled(fixedRate = 100000)
+   // @Scheduled(fixedRate = 100000)
     public void testQuery(){
-    	System.out.println("### Starting MultiDatasource.testQuery ###");
+    	logger.info("### Starting MultiDatasource.testQuery ###");
 
-        Integer postgresqlCount = jdbcPostgresqlTemplate.queryForObject("SELECT count(*) FROM fe_prod_claims_postprocess",Integer.class);
+        //Integer postgresqlCount = jdbcPostgresqlTemplate.queryForObject("SELECT count(*) FROM fe_prod_claims_postprocess",Integer.class);
         
-        Integer topenedgeCount = jdbcOpenedgeTemplate.queryForObject("SELECT count(*) from po",Integer.class);
+       // Integer topenedgeCount = jdbcOpenedgeTemplate.queryForObject("SELECT count(*) from po",Integer.class);
 
-        System.out.println("PostgresqlCount="+postgresqlCount+"  topenedgeCount="+topenedgeCount);
-       logger.debug("PostgresqlCount {}, topenedgeCount {}",  postgresqlCount,topenedgeCount);
+        //System.out.println("PostgresqlCount="+postgresqlCount+"  topenedgeCount="+topenedgeCount);
+       //logger.debug("PostgresqlCount {}, topenedgeCount {}",  postgresqlCount,topenedgeCount);
        
        getAndSaveSymixData("2013-05-03");
-       System.out.println("### Ending MultiDatasource.testQuery ###");
+       logger.info("### Ending MultiDatasource.testQuery ###");
     }
     
  
@@ -63,15 +65,15 @@ public class MultiDatasource {
     	Date date = CommonUtils.stringToDate(dateStr);
         Object[] parameters = new Object[] {date};
         
-        String symixQuery ="SELECT * FROM \"po\" \"poAlias\" INNER JOIN \"poitem\" \"poitemAlias\"  ON  \"poAlias\".\"po-num\" = \"poitemAlias\".\"po-num\"  INNER JOIN \"vendor\" \"vAlias\"  ON  \"poAlias\".\"vend-num\" = \"vAlias\".\"vend-num\"  INNER JOIN \"item\" \"iAlias\"  ON  \"poitemAlias\".\"item\" = \"iAlias\".\"item\"   INNER JOIN \"shipto\" \"sAlias\"  ON  \"poitemAlias\".\"drop-ship-no\" = \"sAlias\".\"drop-ship-no\" and \"poAlias\".\"drop-ship-no\" = \"sAlias\".\"drop-ship-no\" INNER JOIN \"po-div\" \"podAlias\"  ON  \"podAlias\".\"po-num\" = \"poAlias\".\"po-num\" INNER JOIN \"vendor-div\" \"vdAlias\"  ON  \"vdAlias\".\"vend-num\" = \"vAlias\".\"vend-num\"  INNER JOIN \"item-div\" \"idAlias\"  ON  \"idAlias\".\"item\" = \"iAlias\".\"item\" WHERE \"poAlias\".\"order-date\" >=  ? ";
-        System.out.println("symixQuery---->"+ symixQuery);
+        //String symixQuery ="SELECT * FROM \"po\" \"poAlias\" INNER JOIN \"poitem\" \"poitemAlias\"  ON  \"poAlias\".\"po-num\" = \"poitemAlias\".\"po-num\"  INNER JOIN \"vendor\" \"vAlias\"  ON  \"poAlias\".\"vend-num\" = \"vAlias\".\"vend-num\"  INNER JOIN \"item\" \"iAlias\"  ON  \"poitemAlias\".\"item\" = \"iAlias\".\"item\"   INNER JOIN \"shipto\" \"sAlias\"  ON  \"poitemAlias\".\"drop-ship-no\" = \"sAlias\".\"drop-ship-no\" and \"poAlias\".\"drop-ship-no\" = \"sAlias\".\"drop-ship-no\" INNER JOIN \"po-div\" \"podAlias\"  ON  \"podAlias\".\"po-num\" = \"poAlias\".\"po-num\" INNER JOIN \"vendor-div\" \"vdAlias\"  ON  \"vdAlias\".\"vend-num\" = \"vAlias\".\"vend-num\"  INNER JOIN \"item-div\" \"idAlias\"  ON  \"idAlias\".\"item\" = \"iAlias\".\"item\" WHERE \"poAlias\".\"order-date\" >=  ? ";
+        //System.out.println("symixQuery---->"+ symixQuery);
         
-        List<Map<String,Object>> rows =    jdbcOpenedgeTemplate.queryForList(symixQuery,parameters);
+        List<Map<String,Object>> rows =    jdbcOpenedgeTemplate.queryForList(Constants.SIMUX_QUERY,parameters);
         System.out.println("size--->"+rows.size());
         
         try{
      	   for (Map<String,Object> row : rows) {
-         	   System.out.println("po-num---->"+   row.get("po-num"));
+         	   //System.out.println("po-num---->"+   row.get("po-num"));
          	   
          	   //PO Details 
          	   PO po = PrepareQueryData.preparePoData(row);
@@ -102,10 +104,13 @@ public class MultiDatasource {
          	   ItemDiv itemDiv = PrepareQueryData.prepareItemDivData(row); 
          	   item.setItemDiv(itemDiv);
          	   
-         	   System.out.println("po--->"+po);
+         	   VendAddr vendAddr = PrepareQueryData.prepareVendAddrData(row); 
+         	   vendor.setVendAddr(vendAddr);
+         	   
+         	  // System.out.println("po--->"+po);
          	   poRepository.save(po);
          	   
-        		}
+        	}
         }catch(Exception e){
      	   System.out.println("### Exception in  MultiDatasource.testQuery ###"+e.getMessage());
      	   e.printStackTrace();

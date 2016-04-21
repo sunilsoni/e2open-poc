@@ -5,12 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -23,7 +19,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.jci.model.ManagePO;
-import com.jci.model.ManagePOCollectionResponse;
 import com.jci.model.request.FlatFileRequest;
 import com.jci.model.request.PullPoDataRequest;
 import com.jci.model.response.PoNumDataResponse;
@@ -48,12 +43,12 @@ public class ManagePOServiceImpl implements ManagePOService{
 		this.serviceUrl = serviceUrl.startsWith("http") ? serviceUrl: "http://" + serviceUrl;
 	}
 
-	
+	/*
 	@HystrixCommand(fallbackMethod = "getFallbackPoData", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
 			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
 			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "1000") })
-	@Override
+	@Override*/
 	public PullPoDataResponse getPoData(PullPoDataRequest request) {
 		System.out.println("### Starting ManagePOServiceImpl.getPoData ###"+request);
 		System.out.println("serviceUrl--> " + serviceUrl);
@@ -118,13 +113,10 @@ public class ManagePOServiceImpl implements ManagePOService{
 		}
 	    
 	   // File toFile = file.toFile();
-        
+	    Map<Integer, Integer> poNumToStatus = new HashMap<Integer, Integer>();
+	    
         String mimeType= URLConnection.guessContentTypeFromName(toFile.getName());
-		
-		 System.out.println("-------Starting----->"+mimeType);
 		try{
-			// File fileNew = new File("C:/Users/csonisk/Desktop/Docs/apigee/DB/flat-files/006092860_006092860_DiscreteOrderDownload_1.0_5068_20160321070044928.txt");
-			 
 			 RestTemplate template = new RestTemplate();
 
 			 MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -144,19 +136,27 @@ public class ManagePOServiceImpl implements ManagePOService{
 			// map.add("file", res.getLines());
 			 
 			 System.out.println("URL-->"+Constants.SI_FLAT_FILE_URL+"?filename="+toFile.getName());
-			 String result = template.postForObject((Constants.SI_FLAT_FILE_URL+"?fileName="+toFile.getName()), map, String.class);
+			 String result = template.postForObject((Constants.SI_FLAT_FILE_URL+"?filename="+toFile.getName()), map, String.class);
 			 System.out.println("result-->"+result);
-						 
+			 
+			 if(res.getPoNum()!=null){
+				 poNumToStatus.put(res.getPoNum(), Constants.STATUS_TXN_COMPLETED);		
+			 }else{
+			      poNumToStatus.put(request.getPoNums().get(0), Constants.STATUS_TXN_COMPLETED);		
+			 }
 		}catch(Exception e) {
 			e.printStackTrace();
 			finalRes.setError(true);
 			finalRes.setErrorMsg("Error while processing files!!");
+			poNumToStatus.put(res.getPoNum(), Constants.STATUS_ERRO_IN_PROCESS);		
 		}
 		
 		if(!toFile.delete()){
 			 File fl = new File(toFile.getAbsolutePath());
 			 fl.delete();
 		 } 
+		
+		finalRes.setPoNumToStatus(poNumToStatus);
 		 System.out.println("### Ending ManagePOServiceImpl.processPoData(API) ###");
 		return finalRes;
 	}
@@ -186,39 +186,5 @@ public class ManagePOServiceImpl implements ManagePOService{
 		System.out.println("### Ending ManagePOServiceImpl.getTransactionDetail ###");
 		return transaction;
 	}
-	@HystrixCommand(fallbackMethod = "getFallbackTransactions", commandProperties = {
-			@HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
-			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
-			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "1000") })
-	@Override
-	public ManagePOCollectionResponse getTransactions(String accountNumber) {
-		/*List<Transaction> transactions = new ArrayList<Transaction>();
-		for(int i=0; i<3; i++){
-			Transaction transaction = new Transaction(accountId, "FromAcc-"+i, "2014-12-12", 10);
-			transactions.add(transaction);
-		}*/
-		System.out.println("### Starting Ending ManagePOServiceImpl.getTransactions ###");
-		ManagePOCollectionResponse response = restTemplate.getForObject("http://manage-po-core-service/accounts/"+accountNumber+"/transactions/", ManagePOCollectionResponse.class);;
-		return response;
-	}
-	
-	
-	public ManagePOCollectionResponse getFallbackTransactions(String accountNumber) {
-		System.out.println("### Starting ManagePOServiceImpl.getFallbackTransactions ###");
-		ManagePOCollectionResponse response = new ManagePOCollectionResponse();
-		List<ManagePO> transactions = new ArrayList<ManagePO>();
-		for(int i=0; i<3; i++){
-			ManagePO transaction = new ManagePO(i, accountNumber, "FromAcc-"+i, "2014-12-12", 10);
-			transactions.add(transaction);
-		}
-		response.setTransactions(transactions);
-		System.out.println("### Ending ManagePOServiceImpl.getFallbackTransactions ###");
-		return response;
-	}
-	
-	public ManagePO getFallbackTransactionDetail(String accountNumber, long transactionId) {
-		return new ManagePO(transactionId, accountNumber, "FromAcc-Detail", "2014-12-12", 123.00);
-	}
-
 
 }
