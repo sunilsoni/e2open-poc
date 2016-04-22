@@ -153,7 +153,13 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab(vendAddr.getState()));
 			
 			//34: Supplier Country
-			line.append(appendTab(vendAddr.getCounty()+" "+vendAddr.getCountry()));
+			if(vendAddr.getCounty()==null || vendAddr.getCounty().equals("null") || "".equals(vendAddr.getCounty())){
+				line.append(appendTab(vendAddr.getCountry()));
+			}else if(vendAddr.getCountry()==null || vendAddr.getCountry().equals("null") || "".equals(vendAddr.getCountry())){
+				line.append(appendTab(vendAddr.getCounty()));
+			}else{
+				line.append(appendTab(vendAddr.getCounty()+" "+vendAddr.getCountry()));
+			}
 			
 			//35: Supplier Zip
 			line.append(appendTab(vendAddr.getZip()));
@@ -226,7 +232,14 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab(shipTo.getState()));
 			
 			//57: Bill To Country
-			line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
+			if(shipTo.getCounty()==null || shipTo.getCounty().equals("null") || "".equals(shipTo.getCounty())){
+				line.append(appendTab(shipTo.getCountry()));
+			}else if(shipTo.getCountry()==null || shipTo.getCountry().equals("null") || "".equals(shipTo.getCountry())){
+				line.append(appendTab(shipTo.getCounty()));
+			}else{
+				line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
+			}
+			
 			
 			//58: Bill To Zip
 			line.append(appendTab(shipTo.getZip()));
@@ -505,7 +518,16 @@ public static Date stringToDate(String dateStr){
 			line.append(appendTab(shipTo.getState()));
 			
 			//149: Ship To Country
-			line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
+			
+			if(shipTo.getCounty()==null || shipTo.getCounty().equals("null") || "".equals(shipTo.getCounty())){
+				line.append(appendTab(shipTo.getCountry()));
+			}else if(shipTo.getCountry()==null || shipTo.getCountry().equals("null") || "".equals(shipTo.getCountry())){
+				line.append(appendTab(shipTo.getCounty()));
+			}else{
+				line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
+			}
+			
+			
 			
 			//150: Ship To Zip
 			line.append(appendTab(shipTo.getZip()));
