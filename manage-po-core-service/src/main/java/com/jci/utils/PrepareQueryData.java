@@ -1,5 +1,6 @@
 package com.jci.utils;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,10 +14,21 @@ import com.jci.domain.ShipTo;
 import com.jci.domain.VendAddr;
 import com.jci.domain.Vendor;
 import com.jci.domain.VendorDiv;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 public class PrepareQueryData {
 	
+	
+	
+	
+	
 	public static PO preparePoData(Map<String,Object> row){
+		
+		CsvReader reader = new CsvReader( "config-file.csv" )
+		CsvParser parser = new CsvParser(new CsvParserSettings());
+		List<String[]> allRows = parser.parseAll(getReader("/examples/example.csv"));
+		
 		
 	  PO po = new PO();
  	  
