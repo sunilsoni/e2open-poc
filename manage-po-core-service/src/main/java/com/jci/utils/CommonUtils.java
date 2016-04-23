@@ -1,6 +1,9 @@
 package com.jci.utils;
 
-import java.math.BigDecimal;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,18 +13,13 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.jci.domain.Item;
-import com.jci.domain.PO;
-import com.jci.domain.PoItem;
-import com.jci.domain.ShipTo;
-import com.jci.domain.VendAddr;
-import com.jci.domain.Vendor;
+import com.jci.domain.E2Open;
 import com.jci.model.PoDetails;
 import com.jci.model.response.PullPoDataResponse;
 
 public class CommonUtils {
 
-public static Date stringToDate(String dateStr){
+	public static Date stringToDate(String dateStr){
 		
 		if(StringUtils.isBlank(dateStr) || "null".equals(dateStr)){
 			return null;
@@ -38,722 +36,697 @@ public static Date stringToDate(String dateStr){
 	   return convertedCurrentDate;
 	}
 
-	public static List<String> fixedLengthString(List<PO> poList){
+	public static List<String> fixedLengthString(List<E2Open> poList){
 		
 		List<String> lines = new ArrayList<String>();
 		StringBuilder line = null;
 		
-		for (PO po : poList) {
+		for (E2Open po : poList) {
 			line = new StringBuilder();
 			
-			//1: Order Number
-			line.append(appendTab(po.getPoNum()));
+			//1: OrderNumber
+			line.append(appendTab(po.getOrderNumber()));
 			
-			//2: Order Creation Date
-			line.append(appendTab(po.getOrderDate()));
+			//2: OrderCreationDate
+			line.append(appendTab(po.getOrderCreationDate()));
 			
-			//3: Order Status
-			line.append(appendTab(po.getStat()));
+			//3: OrderStatus
+			line.append(appendTab(po.getOrderStatus()));
 			
-			//4: Order Priority
-			line.append(appendTab(null));
+			//4: OrderPriority
+			line.append(appendTab(po.getOrderPriority()));
 			
-			//5: Customer ID
-			line.append(appendTab("JCI-BE"));
+			//5: CustomerID
+			line.append(appendTab(po.getCustomerID()));
 			
-			//6: Customer Description
-			line.append(appendTab("Johnson Controls, Inc. Building Efficiency"));
+			//6: CustomerDescription
+			line.append(appendTab(po.getCustomerDescription()));
 			
-			//7: Customer DUNS
-			line.append(appendTab("6092860"));
+			//7: CustomerDUNS
+			line.append(appendTab(po.getCustomerDUNS()));
 			
-			//8: Customer DUNS+4
-			line.append(appendTab(null));
+			//8: CustomerDUNS+4
+			line.append(appendTab(po.getCustomerDUNS4()));
 			
-			//9: Customer Tax Number
-			line.append(appendTab(null));
+			//9: CustomerTaxNumber
+			line.append(appendTab(po.getCustomerTaxNumber()));
 			
-			//10: Customer Address - Descriptor
-			line.append(appendTab("Milwaukee Office"));
+			//10: CustomerAddressDescriptor
+			line.append(appendTab(po.getCustomerAddressDescriptor()));
 			
-			//11: Customer Address 1
-			line.append(appendTab("5757 N. Green Bay Avenue"));
+			//11: CustomerAddress1
+			line.append(appendTab(po.getCustomerAddress1()));
 			
-			//12: Customer Address 2
-			line.append(appendTab("P.O. Box 591"));
+			//12: CustomerAddress2
+			line.append(appendTab(po.getCustomerAddress2()));
 			
-			//13: Customer Address 3
-			line.append(appendTab("Milwaukee, WI 53201"));
+			//13: CustomerAddress3
+			line.append(appendTab(po.getCustomerAddress3()));
 			
-			//14: Customer Address 4
-			line.append(appendTab("AddressLine4"));
+			//14: CustomerAddress4
+			line.append(appendTab(po.getCustomerAddress4()));
 			
-			//15: Customer Address 5
-			line.append(appendTab("AddressLine5"));
-			
-			
-			//ShipTo shipTo = po.getShipTo();
-			
-			//16: Customer City
-			line.append(appendTab("Milwaukee"));
-			
-			//17: Customer County
-			line.append(appendTab(null));
-			
-			//18: Customer State
-			line.append(appendTab("WI"));
-			
-			//19: Customer Country
-			line.append(appendTab("USA"));
-			
-			//20: Customer Zip
-			line.append(appendTab("53201"));
+			//15: CustomerAddress5
+			line.append(appendTab(po.getCustomerAddress5()));
 			
 			
-			Vendor vendor = po.getVendor();
-			//21: Supplier ID
-			line.append(appendTab(vendor.getVendNum()));
+			//16: CustomerCity
+			line.append(appendTab(po.getCustomerCity()));
 			
-			VendAddr vendAddr = vendor.getVendAddr();
-			//22: Supplier Description
-			line.append(appendTab(vendAddr.getName()));
+			//17: CustomerCounty
+			line.append(appendTab(po.getCustomerCounty()));
 			
-			//23: Supplier DUNS
-			line.append(appendTab(null));
+			//18: CustomerState
+			line.append(appendTab(po.getCustomerState()));
 			
-			//24: Supplier DUNS+4
-			line.append(appendTab(null));
+			//19: CustomerCountry
+			line.append(appendTab(po.getCustomerCountry()));
+			
+			//20: CustomerZip
+			line.append(appendTab(po.getCustomerZip()));
+			
+			//21: SupplierID
+			line.append(appendTab(po.getSupplierID()));
+			
+			
+			//22: SupplierDescription
+			line.append(appendTab(po.getSupplierDescription()));
+			
+			//23: SupplierDUNS
+			line.append(appendTab(po.getSupplierDUNS()));
+			
+			//24: SupplierDUNS+4
+			line.append(appendTab(po.getSupplierDUNS4()));
 			
 
-			//25: Supplier Address - Descriptor
-			line.append(appendTab("SH-DOYEN Office"));
+			//25: SupplierAddressDescriptor
+			line.append(appendTab(po.getSupplierAddressDescriptor()));
 			
-			//26: Supplier Address 1
-			line.append(appendTab(vendAddr.getAddress1()));
+			//26: SupplierAddress1
+			line.append(appendTab(po.getSupplierAddress1()));
 			
-			//27: Supplier Address 2
-			line.append(appendTab(vendAddr.getAddress2()));
+			//27: SupplierAddress2
+			line.append(appendTab(po.getSupplierAddress2()));
 			
-			//28: Supplier Address 3
-			line.append(appendTab(null));
+			//28: SupplierAddress3
+			line.append(appendTab(po.getSupplierAddress3()));
 			
-			//29: Supplier Address 4
-			line.append(appendTab(null));
+			//29: SupplierAddress4
+			line.append(appendTab(po.getSupplierAddress4()));
 			
-			//30: Supplier Address 5
-			line.append(appendTab(null));
+			//30: SupplierAddress5
+			line.append(appendTab(po.getSupplierAddress5()));
 			
-			//31: Supplier City
-			line.append(appendTab(vendAddr.getCity()));
+			//31: SupplierCity
+			line.append(appendTab(po.getSupplierCity()));
 			
-			//32: Supplier County
-			line.append(appendTab(null));
+			//32: SupplierCounty
+			line.append(appendTab(po.getSupplierCounty()));
 			
-			//33: Supplier State
-			line.append(appendTab(vendAddr.getState()));
+			//33: SupplierState
+			line.append(appendTab(po.getSupplierState()));
 			
-			//34: Supplier Country
-			if(vendAddr.getCounty()==null || vendAddr.getCounty().equals("null") || "".equals(vendAddr.getCounty())){
-				line.append(appendTab(vendAddr.getCountry()));
-			}else if(vendAddr.getCountry()==null || vendAddr.getCountry().equals("null") || "".equals(vendAddr.getCountry())){
-				line.append(appendTab(vendAddr.getCounty()));
-			}else{
-				line.append(appendTab(vendAddr.getCounty()+" "+vendAddr.getCountry()));
-			}
+			//34: SupplierCountry
+			line.append(appendTab(po.getSupplierCountry()));
 			
-			//35: Supplier Zip
-			line.append(appendTab(vendAddr.getZip()));
+			//35: SupplierZip
+			line.append(appendTab(po.getSupplierZip()));
 			
-			//36: Buyer Code
+			//36: BuyerCode
 			line.append(appendTab("BuyerCode01"));
 			
-			ShipTo  shipTo = po.getShipTo();
-			//37: Buyer Contact
-			line.append(appendTab(shipTo.getContact()));
+			//37: BuyerContact
+			line.append(appendTab(po.getBuyerContact()));
 			
-			//38: Buyer Name
-			line.append(appendTab(po.getBuyer()));
+			//38: BuyerName
+			line.append(appendTab(po.getBuyerName()));
 			
-			//39: Buyer Email
-			line.append(appendTab(null));
+			//39: BuyerEmail
+			line.append(appendTab(po.getBuyerEmail()));
 			
-			//40: Supplier Email
-			line.append(appendTab(null));
+			//40: SupplierEmail
+			line.append(appendTab(po.getSupplierEmail()));
 			
-			//41: Delivery Term
-			line.append(appendTab(po.getShipCode()));
+			//41: DeliveryTerm
+			line.append(appendTab(po.getDeliveryTerm()));
 			
-			//42: Payment Terms
-			line.append(appendTab(po.getTermsCode()));
+			//42: PaymentTerms
+			line.append(appendTab(po.getPaymentTerms()));
 			
-			//43: Total Order Amount
+			//43: TotalOrderAmount
+			line.append(appendTab(po.getTotalOrderAmount()));
 			
-			BigDecimal poCost = new BigDecimal(po.getPoCost());
-			line.append(appendTab(poCost.add(new BigDecimal(po.getSalesTaxT()))));
 			
-			//44: InCo Terms
-			line.append(appendTab(null));
+			//44: InCoTerms
+			line.append(appendTab(po.getIncoTerms()));
 			
-			//45: Customer Order Notes
-			line.append(appendTab(null));
+			//45: CustomerOrderNotes
+			line.append(appendTab(po.getCustomerOrderNotes()));
 			
-			//46: Supplier Order Notes
-			line.append(appendTab(null));
+			//46: SupplierOrderNotes
+			line.append(appendTab(po.getSupplierOrderNotes()));
 			
 
-			//47: Bill To
-			line.append(appendTab("JCI"));
+			//47: BillTo
+			line.append(appendTab(po.getBillTo()));
 			
-			//48: Bill To Address - Descriptor
-			line.append(appendTab(shipTo.getName()));
+			//48: BillToAddressDescriptor
+			line.append(appendTab(po.getBillToAddress()));
 			
-			//49: Bill To Address 1
-			line.append(appendTab(shipTo.getAddress1()));
+			//49: BillToAddress1
+			line.append(appendTab(po.getBillToAddress1()));
 			
-			//50: Bill To Address 2
-			line.append(appendTab(shipTo.getAddress2()));
+			//50: BillToAddress2
+			line.append(appendTab(po.getBillToAddress2()));
 			
-			//51: Bill To Address 3
-			line.append(appendTab(null));
+			//51: BillToAddress3
+			line.append(appendTab(po.getBillToAddress3()));
 			
-			//52: Bill To Address 4
-			line.append(appendTab(null));
+			//52: BillToAddress4
+			line.append(appendTab(po.getBillToAddress4()));
 			
-			//53: Bill To Address 5
-			line.append(appendTab(null));
+			//53: BillToAddress5
+			line.append(appendTab(po.getBillToAddress5()));
 			
-			//54: Bill To City
-			line.append(appendTab(shipTo.getCity()));
+			//54: BillToCity
+			line.append(appendTab(po.getBillToCity()));
 			
-			//55: Bill To County
-			line.append(appendTab(null));
+			//55: BillToCounty
+			line.append(appendTab(po.getBillToCounty()));
 			
-			//56: Bill To State
-			line.append(appendTab(shipTo.getState()));
+			//56: BillToState
+			line.append(appendTab(po.getBillToState()));
 			
-			//57: Bill To Country
-			if(shipTo.getCounty()==null || shipTo.getCounty().equals("null") || "".equals(shipTo.getCounty())){
-				line.append(appendTab(shipTo.getCountry()));
-			}else if(shipTo.getCountry()==null || shipTo.getCountry().equals("null") || "".equals(shipTo.getCountry())){
-				line.append(appendTab(shipTo.getCounty()));
-			}else{
-				line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
-			}
+			//57: BillToCountry
+			line.append(appendTab(po.getBillToCountry()));
 			
 			
-			//58: Bill To Zip
-			line.append(appendTab(shipTo.getZip()));
+			//58: BillToZip
+			line.append(appendTab(po.getBillToZip()));
 			
 
-			//59: Remit To Address - Descriptor
-			line.append(appendTab(null));
+			//59: RemitToAddressDescriptor
+			line.append(appendTab(po.getRemitToAddressDescriptor()));
 			
-			//60: Remit To Address 1
-			line.append(appendTab(null));
+			//60: RemitToAddress1
+			line.append(appendTab(po.getRemitToAddress1()));
 			
-			//61: Remit To Address 2
-			line.append(appendTab(null));
+			//61: RemitToAddress2
+			line.append(appendTab(po.getRemitToAddress2()));
 			
-			//62: Remit To Address 3
-			line.append(appendTab(null));
+			//62: RemitToAddress3
+			line.append(appendTab(po.getRemitToAddress3()));
 			
-			//63: Remit To Address 4
-			line.append(appendTab(null));
+			//63: RemitToAddress4
+			line.append(appendTab(po.getRemitToAddress4()));
 			
-			//64: Remit To Address 5
-			line.append(appendTab(null));
+			//64: RemitToAddress5
+			line.append(appendTab(po.getRemitToAddress5()));
 			
-			//65: Remit To City
-			line.append(appendTab(null));
+			//65: RemitToCity
+			line.append(appendTab(po.getRemitToCity()));
 			
-			//66: Remit To County
-			line.append(appendTab(null));
+			//66: RemitToCounty
+			line.append(appendTab(po.getRemitToCounty()));
 			
-			//67: Remit To State
-			line.append(appendTab(null));
+			//67: RemitToState
+			line.append(appendTab(po.getRemitToState()));
 			
-			//68: Remit To Country
-			line.append(appendTab(null));
+			//68: RemitToCountry
+			line.append(appendTab(po.getRemitToCountry()));
 			
-			//69: Remit To Zip
-			line.append(appendTab(null));
+			//69: RemitToZip
+			line.append(appendTab(po.getRemitToZip()));
 			
-			//70: Buyer Contact - Phone
-			line.append(appendTab(null));
+			//70: BuyerContactPhone
+			line.append(appendTab(po.getBuyerContactPhone()));
 			
-			//71: Buyer Contact - Fax
-			line.append(appendTab(null));
+			//71: BuyerContactFax
+			line.append(appendTab(po.getBuyerContactFax()));
 			
-			//72: Order Type
-			line.append(appendTab(null));
+			//72: OrderType
+			line.append(appendTab(po.getOrderType()));
 			
-			//73: Flex String PO Header 4
-			line.append(appendTab(null));
+			//73: FlexStringPOHeader4
+			line.append(appendTab(po.getFlexStringPOHeader4()));
 			
-			//74: Flex String PO Header 5
-			line.append(appendTab(null));
+			//74: FlexStringPOHeader5
+			line.append(appendTab(po.getFlexStringPOHeader5()));
 			
-			//75: Flex String PO Header 6
-			line.append(appendTab(null));
+			//75: FlexStringPOHeader6
+			line.append(appendTab(po.getFlexStringPOHeader6()));
 			
-			//76: Flex String PO Header 7
-			line.append(appendTab(null));
+			//76: FlexStringPOHeader7
+			line.append(appendTab(po.getFlexStringPOHeader7()));
 			
-			//77: Flex String PO Header 8
-			line.append(appendTab(null));
+			//77: FlexStringPOHeader8
+			line.append(appendTab(po.getFlexStringPOHeader8()));
 			
-			//78: Flex String PO Header 9
-			line.append(appendTab(null));
+			//78: FlexStringPOHeader9
+			line.append(appendTab(po.getFlexStringPOHeader9()));
 			
-			//79: Flex Int PO Header 1
-			line.append(appendTab(null));
+			//79: FlexIntPOHeader1
+			line.append(appendTab(po.getFlexIntPOHeader1()));
 			
-			//80: Flex Int PO Header 2
-			line.append(appendTab(null));
+			//80: FlexIntPOHeader2
+			line.append(appendTab(po.getFlexIntPOHeader2()));
 			
-			//81: Flex Int PO Header 3
-			line.append(appendTab(null));
+			//81: FlexIntPOHeader3
+			line.append(appendTab(po.getFlexIntPOHeader3()));
 			
-			//82: Flex Int PO Header 4
-			line.append(appendTab(null));
+			//82: FlexIntPOHeader4
+			line.append(appendTab(po.getFlexIntPOHeader4()));
 			
-			//83: Flex Int PO Header 5
-			line.append(appendTab(null));
+			//83: FlexIntPOHeader5
+			line.append(appendTab(po.getFlexIntPOHeader5()));
 			
-			//84: Flex Float PO Header 1
-			line.append(appendTab(null));
+			//84: FlexFloatPOHeader1
+			line.append(appendTab(po.getFlexFloatPOHeader1()));
 			
-			//85: Flex Float PO Header 2
-			line.append(appendTab(null));
+			//85: FlexFloatPOHeader2
+			line.append(appendTab(po.getFlexFloatPOHeader2()));
 			
-			//86: Flex Float PO Header 3
-			line.append(appendTab(null));
+			//86: FlexFloatPOHeader3
+			line.append(appendTab(po.getFlexFloatPOHeader3()));
 			
-			//87: Flex Float PO Header 4
-			line.append(appendTab(null));
+			//87: FlexFloatPOHeader4
+			line.append(appendTab(po.getFlexFloatPOHeader4()));
 			
-			//88: Flex Float PO Header 5
-			line.append(appendTab(null));
+			//88: FlexFloatPOHeader5
+			line.append(appendTab(po.getFlexFloatPOHeader5()));
 			
-			//89: Flex Date PO Header 1
-			line.append(appendTab(null));
+			//89: FlexDatePOHeader1
+			line.append(appendTab(po.getFlexDatePOHeader1()));
 			
-			//90: Flex Date PO Header 2
-			line.append(appendTab(null));
+			//90: FlexDatePOHeader2
+			line.append(appendTab(po.getFlexDatePOHeader2()));
 			
-			//91: Flex Date PO Header 3
-			line.append(appendTab(null));
+			//91: FlexDatePOHeader3
+			line.append(appendTab(po.getFlexDatePOHeader3()));
 			
-			//92: Flex Date PO Header 4
-			line.append(appendTab(null));
+			//92: FlexDatePOHeader4
+			line.append(appendTab(po.getFlexDatePOHeader4()));
 			
-			//93: Flex Date PO Header 5
-			line.append(appendTab(null));
+			//93: FlexDatePOHeader5
+			line.append(appendTab(po.getFlexDatePOHeader5()));
 			
-			PoItem poItem = po.getPoItem();
-			//94: Line ID
-			line.append(appendTab(poItem.getPoLine()));
+			//94: LineID
+			line.append(appendTab(po.getLineID()));
 			
-			//95: Line Status
-			line.append(appendTab(poItem.getPoRelease()));
+			//95: LineStatus
+			line.append(appendTab(po.getLineStatus()));
 			
-			//96: Customer Item ID
-			line.append(appendTab(poItem.getItem()));
+			//96: CustomerItemID
+			line.append(appendTab(po.getCustomerItemID()));
 			
-			Item item = poItem.getItemKey();
-			System.out.println("item-->"+item);
 			
-			//97: Customer Item Description
-			line.append(appendTab(item.getDescription()));
+			//97: CustomerItemDescription
+			line.append(appendTab(po.getCustomerItemDescription()));
 			
-			//98: Supplier Item ID
-			line.append(appendTab(poItem.getVendItem()));
+			//98: SupplierItemID
+			line.append(appendTab(po.getSupplierItemID()));
 			
-			//99: Supplier Item Description
-			line.append(appendTab(null));
+			//99: SupplierItemDescription
+			line.append(appendTab(po.getSupplierItemDescription()));
 			
-			//101: Unit Price
-			line.append(appendTab(null));
+			//100:UnitPrice
+			line.append(appendTab(po.getUnitPrice()));
 			
-			//102: Price Basis
-			line.append(appendTab(null));
+			//101: PriceBasis
+			line.append(appendTab(po.getPriceBasis()));
 			
-			//103: Payment Currency
-			line.append(appendTab(null));
+			//102: PaymentCurrency
+			line.append(appendTab(po.getPaymentCurrency()));
 			
-			//104: Total Line Amount
-			line.append(appendTab(poItem.getItemCost()));
+			//103:TotalLineAmount
+			line.append(appendTab(po.getTotalLineAmount()));
 			
-			//105: UOM
-			line.append(appendTab(null));
+			//104: UOM
+			line.append(appendTab(po.getUOM()));
 			
-			//106: Customer Order Line Notes
-			line.append(appendTab(null));
+			//105: CustomerOrderLineNotes
+			line.append(appendTab(po.getCustomerOrderLineNotes()));
 			
-			//107: Supplier Order Line Notes
-			line.append(appendTab(null));
+			//106: SupplierOrderLineNotes
+			line.append(appendTab(po.getSupplierOrderLineNotes()));
 			
-			//108: Drawing Version
-			line.append(appendTab(null));
+			//107: DrawingVersion
+			line.append(appendTab(po.getDrawingVersion()));
 			
-			//109: Drawing Number
-			line.append(appendTab(item.getDrawingNbr()));
+			//108: DrawingNumber
+			line.append(appendTab(po.getDrawingNumber()));
 			
-			//110: Item Category
-			line.append(appendTab(item.getProductCode()));
+			//109: ItemCategory
+			line.append(appendTab(po.getItemCategory()));
 			
-			//111: Ship To Location
-			line.append(appendTab(po.getDropShipNo()));
+			//110: ShipToLocation
+			line.append(appendTab(po.getShipToLocation()));
 			
-			//112: Flex String PO Line 5
-			line.append(appendTab(null));
+			//111: FlexStringPOLine5
+			line.append(appendTab(po.getFlexStringPOLine5()));
 			
-			//113: Flex String PO Line 6
-			line.append(appendTab(null));
+			//112: FlexStringPOLine6
+			line.append(appendTab(po.getFlexStringPOLine6()));
 			
-			//114: Flex String PO Line 7
-			line.append(appendTab(null));
+			//113: FlexStringPOLine7
+			line.append(appendTab(po.getFlexStringPOLine7()));
 			
-			//115: Flex String PO Line 8
-			line.append(appendTab(null));
+			//114: FlexStringPOLine8
+			line.append(appendTab(po.getFlexStringPOLine8()));
 			
-			//116: Flex String PO Line 9
-			line.append(appendTab(null));
+			//115: FlexStringPOLine9
+			line.append(appendTab(po.getFlexStringPOLine9()));
 			
-			//117: Free Item Flag
-			line.append(appendTab(null));
+			//116: FreeItemFlag
+			line.append(appendTab(po.getFreeItemFlag()));
 			
-			//118: Flex Int PO Line 2
-			line.append(appendTab(null));
+			//117: FlexIntPOLine2
+			line.append(appendTab(po.getFlexIntPOLine2()));
 			
-			//119: Flex Int PO Line 3
-			line.append(appendTab(null));
+			//118: FlexIntPOLine3
+			line.append(appendTab(po.getFlexIntPOLine3()));
 			
-			//120: Flex Int PO Line 4
-			line.append(appendTab(null));
+			//119: FlexIntPOLine4
+			line.append(appendTab(po.getFlexIntPOLine4()));
 			
-			//121: Flex Int PO Line 5
-			line.append(appendTab(null));
+			//120: FlexIntPOLine5
+			line.append(appendTab(po.getFlexIntPOLine5()));
 			
-			//122: Flex Float PO Line 1
-			line.append(appendTab(null));
 			
-			//123: Flex Float PO Line 2
-			line.append(appendTab(null));
+			//Counting mistake from here correct this ---------
+			//122: FlexFloatPOLine1
+			line.append(appendTab(po.getFlexFloatPOLine1()));
 			
-			//124: Flex Float PO Line 3
-			line.append(appendTab(null));
+			//123: FlexFloatPOLine2
+			line.append(appendTab(po.getFlexFloatPOLine2()));
 			
-			//125: Flex Float PO Line 4
-			line.append(appendTab(null));
+			//124: FlexFloatPOLine3
+			line.append(appendTab(po.getFlexFloatPOLine3()));
 			
-			//126: Flex Float PO Line 5
-			line.append(appendTab(null));
+			//125: FlexFloatPOLine4
+			line.append(appendTab(po.getFlexFloatPOLine4()));
 			
-			//127: Flex Date PO Line 1
-			line.append(appendTab(null));
+			//126: FlexFloatPOLine5
+			line.append(appendTab(po.getFlexFloatPOLine5()));
 			
-			//128: Flex Date PO Line 2
-			line.append(appendTab(null));
+			//127: FlexDatePOLine1
+			line.append(appendTab(po.getFlexDatePOLine1()));
 			
-			//129: Flex Date PO Line 3
-			line.append(appendTab(null));
+			//128: FlexDatePOLine2
+			line.append(appendTab(po.getFlexDatePOLine2()));
 			
-			//130: Flex Date PO Line 4
-			line.append(appendTab(null));
+			//129: FlexDatePOLine3
+			line.append(appendTab(po.getFlexDatePOLine3()));
 			
-			//131: Flex Date PO Line 5
-			line.append(appendTab(null));
+			//130: FlexDatePOLine4
+			line.append(appendTab(po.getFlexDatePOLine4()));
 			
-			//132: Request ID
-			line.append(appendTab(null));
+			//131: FlexDatePOLine5
+			line.append(appendTab(po.getFlexDatePOLine5()));
 			
-			//133: Request Status
-			line.append(appendTab(null));
+			//132: RequestID
+			line.append(appendTab(po.getRequestID()));
+			
+			//133: RequestStatus
+			line.append(appendTab(po.getRequestStatus()));
 			
 			//134: Action
-			line.append(appendTab(null));
+			line.append(appendTab(po.getAction()));
 			
-			//135: Request Qty
-			line.append(appendTab(poItem.getQtyOrdered()));
+			//135: RequestQty
+			line.append(appendTab(po.getRequestQty()));
 			
-			//136: Request Date
-			line.append(appendTab(po.getOrderDate()));
+			//136: RequestDate
+			line.append(appendTab(po.getRequestDate()));
 			
-			//137: Requested Ship Date
-			line.append(appendTab(poItem.getDueDate()));
+			//137: RequestedShipDate
+			line.append(appendTab(po.getRequestedShipDate()));
 			
 			//138: Carrier
-			line.append(appendTab(null));
+			line.append(appendTab(po.getCarrier()));
 			
-			//139: Customer Site
-			line.append(appendTab(null));
+			//139: CustomerSite
+			line.append(appendTab(po.getCustomerSite()));
 			
-			//140: Ship To Address - Descriptor
-			line.append(appendTab(shipTo.getName()));
+			//140: ShipToAddressDescriptor
+			line.append(appendTab(po.getShipToAddressDescriptor()));
 			
-			//141: Ship To Address 1
-			line.append(appendTab(shipTo.getAddress1()));
+			//141: ShipToAddress1
+			line.append(appendTab(po.getShipToAddress1()));
 			
-			//142: Ship To Address 2
-			line.append(appendTab(shipTo.getAddress2()));
+			//142: ShipToAddress2
+			line.append(appendTab(po.getShipToAddress2()));
 			
-			//143: Ship To Address 3
-			line.append(appendTab(null));
+			//143: ShipToAddress3
+			line.append(appendTab(po.getShipToAddress3()));
 			
-			//144: Ship To Address 4
-			line.append(appendTab(null));
+			//144: ShipToAddress4
+			line.append(appendTab(po.getShipToAddress4()));
 			
-			//145: Ship To Address 5
-			line.append(appendTab(null));
+			//145: ShipToAddress5
+			line.append(appendTab(po.getShipToAddress5()));
 			
-			//146: Ship To City
-			line.append(appendTab(shipTo.getCity()));
+			//146: ShipToCity
+			line.append(appendTab(po.getShipToCity()));
 			
 			
-			//147: Ship To County
-			line.append(appendTab(null));
+			//147: ShipToCounty
+			line.append(appendTab(po.getShipToCounty()));
 			
-			//148: Ship To State
-			line.append(appendTab(shipTo.getState()));
+			//148: ShipToState
+			line.append(appendTab(po.getShipToState()));
 			
-			//149: Ship To Country
+			//149: ShipToCountry
+			line.append(appendTab(po.getShipToCountry()));
 			
-			if(shipTo.getCounty()==null || shipTo.getCounty().equals("null") || "".equals(shipTo.getCounty())){
-				line.append(appendTab(shipTo.getCountry()));
-			}else if(shipTo.getCountry()==null || shipTo.getCountry().equals("null") || "".equals(shipTo.getCountry())){
-				line.append(appendTab(shipTo.getCounty()));
-			}else{
-				line.append(appendTab(shipTo.getCounty()+" "+shipTo.getCountry()));
-			}
 			
+			//150: ShipToZip
+			line.append(appendTab(po.getShipToZip()));
 			
+			//151: RefOrderType
+			line.append(appendTab(po.getRefOrderType()));
 			
-			//150: Ship To Zip
-			line.append(appendTab(shipTo.getZip()));
+			//152: RefOrderID
+			line.append(appendTab(po.getRefOrderID()));
 			
-			//151: Ref Order Type
-			line.append(appendTab(null));
+			//153: RefOrderLineID
+			line.append(appendTab(po.getRefOrderLineID()));
 			
-			//152: Ref Order ID
-			line.append(appendTab(null));
+			//154: RefOrderRequestID
+			line.append(appendTab(po.getRefOrderRequestID()));
 			
-			//153: Ref Order Line ID
-			line.append(appendTab(null));
 			
-			//154: Ref Order Request ID
-			line.append(appendTab(null));
+			//155: RefCustomerID
+			line.append(appendTab(po.getRefCustomerID()));
 			
+			//156: RefSupplierID
+			line.append(appendTab(po.getRefSupplierID()));
 			
-			//155: Ref Customer ID
-			line.append(appendTab(null));
+			//157: FlexStringPORequest1
+			line.append(appendTab(po.getFlexStringPORequest1()));
 			
-			//156: Ref Supplier ID
-			line.append(appendTab(null));
+			//158: FlexStringPORequest2
+			line.append(appendTab(po.getFlexStringPORequest2()));
 			
-			//157: Flex String PO Request 1
-			line.append(appendTab(null));
+			//159: FlexStringPORequest3
+			line.append(appendTab(po.getFlexStringPORequest3()));
 			
-			//158: Flex String PO Request 2
-			line.append(appendTab(null));
+			//160: FlexStringPORequest4
+			line.append(appendTab(po.getFlexStringPORequest4()));
 			
-			//159: Flex String PO Request 3
-			line.append(appendTab(null));
+			//161: FlexStringPORequest5
+			line.append(appendTab(po.getFlexStringPORequest5()));
 			
-			//160: Flex String PO Request 4
-			line.append(appendTab(null));
+			//162: FlexStringPORequest6
+			line.append(appendTab(po.getFlexStringPORequest6()));
 			
-			//161: Flex String PO Request 5
-			line.append(appendTab(null));
+			//163: FlexStringPORequest7
+			line.append(appendTab(po.getFlexStringPORequest7()));
 			
-			//162: Flex String PO Request 6
-			line.append(appendTab(null));
+			//164: FlexStringPORequest8
+			line.append(appendTab(po.getFlexStringPORequest8()));
 			
-			//163: Flex String PO Request 7
-			line.append(appendTab(null));
+			//165: FlexStringPORequest9
+			line.append(appendTab(po.getFlexStringPORequest9()));
 			
-			//164: Flex String PO Request 8
-			line.append(appendTab(null));
+			//166: FlexIntPORequest1
+			line.append(appendTab(po.getFlexIntPORequest1()));
 			
-			//165: Flex String PO Request 9
-			line.append(appendTab(null));
+			//167: FlexIntPORequest2
+			line.append(appendTab(po.getFlexIntPORequest2()));
 			
-			//166: Flex Int PO Request 1
-			line.append(appendTab(null));
+			//168: FlexIntPORequest3
+			line.append(appendTab(po.getFlexIntPORequest3()));
 			
-			//167: Flex Int PO Request 2
-			line.append(appendTab(null));
 			
-			//168: Flex Int PO Request 3
-			line.append(appendTab(null));
+			//169: FlexIntPORequest4
+			line.append(appendTab(po.getFlexIntPORequest4()));
 			
+			//170: 	FlexIntPORequest5
+			line.append(appendTab(po.getFlexIntPORequest5()));
 			
-			//169: Flex Int PO Request 4
-			line.append(appendTab(null));
+			//171: 	FlexFloatPORequest1
+			line.append(appendTab(po.getFlexFloatPORequest1()));
 			
-			//170: 	Flex Int PO Request 5
-			line.append(appendTab(null));
+			//172: 	FlexFloatPORequest2
+			line.append(appendTab(po.getFlexFloatPORequest2()));
 			
-			//171: 	Flex Float PO Request 1
-			line.append(appendTab(null));
+			//173: 	FlexFloatPORequest3
+			line.append(appendTab(po.getFlexFloatPORequest3()));
 			
-			//172: 	Flex Float PO Request 2
-			line.append(appendTab(null));
+			//174: 	FlexFloatPORequest4
+			line.append(appendTab(po.getFlexFloatPORequest4()));
 			
-			//173: 	Flex Float PO Request 3
-			line.append(appendTab(null));
+			//175: 	FlexFloatPORequest5
+			line.append(appendTab(po.getFlexFloatPORequest5()));
 			
-			//174: 	Flex Float PO Request 4
-			line.append(appendTab(null));
+			//176: 	FlexDatePORequest1
+			line.append(appendTab(po.getFlexDatePORequest1()));
 			
-			//175: 	Flex Float PO Request 5
-			line.append(appendTab(null));
+			//177: 	FlexDatePORequest2
+			line.append(appendTab(po.getFlexDatePORequest2()));
 			
-			//176: 	Flex Date PO Request 1
-			line.append(appendTab(null));
+			//178: 	FlexDatePORequest3
+			line.append(appendTab(po.getFlexDatePORequest3()));
 			
-			//177: 	Flex Date PO Request 2
-			line.append(appendTab(null));
+			//179: 	FlexDatePORequest4
+			line.append(appendTab(po.getFlexDatePORequest4()));
 			
-			//178: 	Flex Date PO Request 3
-			line.append(appendTab(null));
+			//180: 	FlexDatePORequest5
+			line.append(appendTab(po.getFlexDatePORequest5()));
 			
-			//179: 	Flex Date PO Request 4
-			line.append(appendTab(null));
+			//181: 	PromiseID
+			line.append(appendTab(po.getPromiseID()));
 			
-			//180: 	Flex Date PO Request 5
-			line.append(appendTab(null));
+			//182: 	PromiseQty
+			line.append(appendTab(po.getPromiseQty()));
 			
-			//181: 	Promise ID
-			line.append(appendTab(null));
+			//183: 	PromiseDate
+			line.append(appendTab(po.getPromiseDate()));
 			
-			//182: 	Promise Qty
-			line.append(appendTab(null));
+			//184: 	PromisedShipDate
+			line.append(appendTab(po.getPromisedShipDate()));
 			
-			//183: 	Promise Date
-			line.append(appendTab(null));
+			//185: 	SupplierSite
+			line.append(appendTab(po.getSupplierSite()));
 			
-			//184: 	Promised Ship Date
-			line.append(appendTab(null));
+			//186: 	ShipFromAddressDescriptor
+			line.append(appendTab(po.getShipFromAddressDescriptor()));
 			
-			//185: 	Supplier Site
-			line.append(appendTab(null));
 			
-			//186: 	Ship From Address - Descriptor
-			line.append(appendTab(null));
+			//187: 	ShipFromAddress1
+			line.append(appendTab(po.getShipFromAddress1()));
 			
+			//188: 	ShipFromAddress2
+			line.append(appendTab(po.getShipFromAddress2()));
 			
-			//187: 	Ship From Address 1
-			line.append(appendTab(null));
+			//189: 	ShipFromAddress3
+			line.append(appendTab(po.getShipFromAddress3()));
 			
-			//188: 	Ship From Address 2
-			line.append(appendTab(null));
+			//190: 	ShipFromAddress4
+			line.append(appendTab(po.getShipFromAddress4()));
 			
-			//189: 	Ship From Address 3
-			line.append(appendTab(null));
+			//191: 	ShipFromAddress5
+			line.append(appendTab(po.getShipFromAddress5()));
 			
-			//190: 	Ship From Address 4
-			line.append(appendTab(null));
 			
-			//191: 	Ship From Address 5
-			line.append(appendTab(null));
+			//192: 	ShipFromCity
+			line.append(appendTab(po.getShipFromCity()));
 			
+			//193: 	ShipFromCounty
+			line.append(appendTab(po.getShipFromCounty()));
 			
-			//192: 	Ship From City
-			line.append(appendTab(null));
+			//194: 	ShipFromState
+			line.append(appendTab(po.getShipFromState()));
 			
-			//193: 	Ship From County
-			line.append(appendTab(null));
+			//195: 	ShipFromCountry
+			line.append(appendTab(po.getShipFromCountry()));
 			
-			//194: 	Ship From State
-			line.append(appendTab(null));
+			//196: 	ShipFromZip
+			line.append(appendTab(po.getShipFromZip()));
 			
-			//195: 	Ship From Country
-			line.append(appendTab(null));
+			//197: 	FlexStringPOPromise1
+			line.append(appendTab(po.getFlexStringPOPromise1()));
 			
-			//196: 	Ship From Zip
-			line.append(appendTab(null));
+			//198: 	FlexStringPOPromise2
+			line.append(appendTab(po.getFlexStringPOPromise2()));
 			
-			//197: 	Flex String PO Promise 1
-			line.append(appendTab(null));
+			//199: 	FlexStringPOPromise3
+			line.append(appendTab(po.getFlexStringPOPromise3()));
 			
-			//198: 	Flex String PO Promise 2
-			line.append(appendTab(null));
+			//200: 	FlexStringPOPromise4
+			line.append(appendTab(po.getFlexStringPOPromise4()));
 			
-			//199: 	Flex String PO Promise 3
-			line.append(appendTab(null));
+			//201: 	FlexStringPOPromise5
+			line.append(appendTab(po.getFlexStringPOPromise5()));
 			
-			//200: 	Flex String PO Promise 4
-			line.append(appendTab(null));
+			//202: 		FlexStringPOPromise6
+			line.append(appendTab(po.getFlexStringPOPromise6()));
 			
-			//201: 	Flex String PO Promise 5
-			line.append(appendTab(null));
+			//203: 	FlexStringPOPromise7
+			line.append(appendTab(po.getFlexStringPOPromise7()));
 			
-			//202: 		Flex String PO Promise 6
-			line.append(appendTab(null));
+			//204: 	FlexStringPOPromise8
+			line.append(appendTab(po.getFlexStringPOPromise8()));
 			
-			//203: 	Flex String PO Promise 7
-			line.append(appendTab(null));
+			//205: 	FlexStringPOPromise9
+			line.append(appendTab(po.getFlexStringPOPromise9()));
 			
-			//204: 	Flex String PO Promise 8
-			line.append(appendTab(null));
+			//206: 	FlexIntPOPromise1
+			line.append(appendTab(po.getFlexIntPOPromise1()));
 			
-			//205: 	Flex String PO Promise 9
-			line.append(appendTab(null));
+			//207: 	FlexIntPOPromise2
+			line.append(appendTab(po.getFlexIntPOPromise2()));
 			
-			//206: 	Flex Int PO Promise 1
-			line.append(appendTab(null));
+			//208: 	FlexIntPOPromise3
+			line.append(appendTab(po.getFlexIntPOPromise3()));
 			
-			//207: 	Flex Int PO Promise 2
-			line.append(appendTab(null));
+			//209: 	FlexIntPOPromise4
+			line.append(appendTab(po.getFlexIntPOPromise4()));
 			
-			//208: 	Flex Int PO Promise 3
-			line.append(appendTab(null));
+			//210: 	FlexIntPOPromise5
+			line.append(appendTab(po.getFlexIntPOPromise5()));
 			
-			//209: 	Flex Int PO Promise 4
-			line.append(appendTab(null));
+			//211: 	FlexFloatPOPromise1
+			line.append(appendTab(po.getFlex_Float_PO_Promise1()));
 			
-			//210: 	Flex Int PO Promise 5
-			line.append(appendTab(null));
+			//212: 	FlexFloatPOPromise2
+			line.append(appendTab(po.getFlexFloatPOPromise2()));
 			
-			//211: 	Flex Float PO Promise 1
-			line.append(appendTab(null));
+			//213: 	FlexFloatPOPromise3
+			line.append(appendTab(po.getFlexFloatPOPromise3()));
 			
-			//212: 	Flex Float PO Promise 2
-			line.append(appendTab(null));
+			//214: 	FlexFloatPOPromise4
+			line.append(appendTab(po.getFlexFloatPOPromise4()));
 			
-			//213: 	Flex Float PO Promise 3
-			line.append(appendTab(null));
+			//215: 	FlexFloatPOPromise5
+			line.append(appendTab(po.getFlexFloatPOPromise5()));
 			
-			//214: 	Flex Float PO Promise 4
-			line.append(appendTab(null));
+			//216: 	FlexDatePOPromise1
+			line.append(appendTab(po.getFlexDatePOPromise1()));
 			
-			//215: 	Flex Float PO Promise 5
-			line.append(appendTab(null));
+			//217: 	FlexDatePOPromise2
+			line.append(appendTab(po.getFlexDatePOPromise2()));
 			
-			//216: 	Flex Date PO Promise 1
-			line.append(appendTab(null));
+			//218: 	FlexDatePOPromise3
+			line.append(appendTab(po.getFlexDatePOPromise3()));
 			
-			//217: 	Flex Date PO Promise 2
-			line.append(appendTab(null));
+			//219: 	FlexDatePOPromise4
+			line.append(appendTab(po.getFlexDatePOPromise4()));
 			
-			//218: 	Flex Date PO Promise 3
-			line.append(appendTab(null));
-			
-			//219: 	Flex Date PO Promise 4
-			line.append(appendTab(null));
-			
-			//220: 	Flex Date PO Promise 5
-			line.append(appendTab(null));
+			//220: 	FlexDatePOPromise5
+			line.append(appendTab(po.getFlexDatePOPromise5()));
 			
 			//221: 	Rev #
-			line.append(appendTab(null));
+			line.append(appendTab(po.getRev()));
 			
-			//222: 	Ship To Customer ID
-			line.append("");
+			//222: 	ShipToCustomerID
+			if(!CommonUtils.isBlank(po.getShipToCustomerID())){
+				line.append(po.getShipToCustomerID());
+			}
+			
 
 			lines.add(line.toString());
-			System.out.println("line--->"+line);
 		 }
 		return lines;
 	}
@@ -772,7 +745,7 @@ public static Date stringToDate(String dateStr){
 	    return String.format("%1$"+length+ "s", string);
 	}*/
 	
-	public static String getFileName(int poNum) {
+	public static String getFileName(String poNum) {
 		
 		StringBuilder name = new StringBuilder();
 		
@@ -800,7 +773,7 @@ public static Date stringToDate(String dateStr){
 		
 	}
 	
-	public static PullPoDataResponse preparePullPoDataResponse(List<PO> poList){
+	public static PullPoDataResponse preparePullPoDataResponse(List<E2Open> poList){
 		System.out.println("#### Starting preparePullPoDataResponse(core) ####");
 		PullPoDataResponse res = new PullPoDataResponse();
 		
@@ -811,14 +784,14 @@ public static Date stringToDate(String dateStr){
 		
 		ArrayList<PoDetails> poDetails = new ArrayList<PoDetails>() ;
 		
-		for (PO row : poList) {
+		for (E2Open row : poList) {
 			PoDetails details = new PoDetails();
 			
 			details.setDataSource(row.getDataSource());
 			
-			details.setPoDesc(row.getBuyer());
+			details.setPoDesc(row.getCustomerDescription());//Need to verify
 			details.setPoId(row.getId());
-			details.setPoNum(row.getPoNum());
+			details.setPoNum(row.getOrderNumber());
 			details.setStatus(row.getStatus());
 			poDetails.add(details);
 		}
@@ -828,6 +801,29 @@ public static Date stringToDate(String dateStr){
 		res.setErrorInDataSave(false);
 		System.out.println("#### Ending preparePullPoDataResponse(core) ####"+res);
 		return res;
+	}
+
+	public Reader getReader() {
+		try {
+			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+			InputStream is = classloader.getResourceAsStream(Constants.CONFIG_FILE_NAME);
+			return new InputStreamReader(is, "UTF-8");
+		} catch (UnsupportedEncodingException  e) {
+			e.printStackTrace();
+			throw new IllegalStateException("Unable to read input", e);
+		}
+	}
+	
+	public static boolean isBlank(String val){
+		
+		if("null".equals(val)){
+			return true;
+		}
+		
+		if(StringUtils.isBlank(val)){
+			return true;
+		}
+		return false;
 	}
 	
 }

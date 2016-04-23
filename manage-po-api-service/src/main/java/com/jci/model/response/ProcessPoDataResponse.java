@@ -7,7 +7,7 @@ public class ProcessPoDataResponse {
 	private boolean isError;
 	private String errorMsg;
 	
-	private Map<Integer, Integer> poNumToStatus = null;
+	private Map<String, Integer> poNumToStatus = null;
 	
 	
 	public boolean isError() {
@@ -22,10 +22,10 @@ public class ProcessPoDataResponse {
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
-	public Map<Integer, Integer> getPoNumToStatus() {
+	public Map<String, Integer> getPoNumToStatus() {
 		return poNumToStatus;
 	}
-	public void setPoNumToStatus(Map<Integer, Integer> poNumToStatus) {
+	public void setPoNumToStatus(Map<String, Integer> poNumToStatus) {
 		this.poNumToStatus = poNumToStatus;
 	}
 	

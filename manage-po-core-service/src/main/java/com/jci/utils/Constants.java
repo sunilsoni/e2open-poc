@@ -17,9 +17,9 @@ public class Constants {
 	
 	
 	/**
-	 * Below are database source names and corresponding integer values
+	 * Below are database source names and corresponding string values
 	 */
-	public static final int DATASOURCE_SYMIX =1;
+	public static final String DATASOURCE_SYMIX ="Symix";
 	
 	
 	/**
@@ -35,7 +35,7 @@ public class Constants {
 	public static final String FILE_DATE_FORMAT = "yyyyMMddHHmmssSSS";
 	
 	
-	
+	public static final String CONFIG_FILE_NAME = "config-file.csv";
 	
 }
 

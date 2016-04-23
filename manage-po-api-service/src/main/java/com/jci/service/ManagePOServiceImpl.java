@@ -84,11 +84,17 @@ public class ManagePOServiceImpl implements ManagePOService{
 	@Override*/
 	public ProcessPoDataResponse processPoData(FlatFileRequest request) {
 		System.out.println("### Starting ManagePOServiceImpl.processPoData(API) ###"+request);
-		
-		PoNumDataResponse res = restTemplate.postForObject((serviceUrl+"getPoNumData"),request, PoNumDataResponse.class);
-		//System.out.println("res-->"+res);
-		
+		final PoNumDataResponse res;
 		ProcessPoDataResponse finalRes = new ProcessPoDataResponse();
+		
+		try{
+			res = restTemplate.postForObject((serviceUrl+"getPoNumData"),request, PoNumDataResponse.class);
+		}catch (Exception e) {
+			e.printStackTrace();
+			finalRes.setError(true);
+			return finalRes;
+		}
+	
 		finalRes.setErrorMsg(res.getErrorMsg());
 		if(res.isError()){
 			finalRes.setError(true);
@@ -113,7 +119,7 @@ public class ManagePOServiceImpl implements ManagePOService{
 		}
 	    
 	   // File toFile = file.toFile();
-	    Map<Integer, Integer> poNumToStatus = new HashMap<Integer, Integer>();
+	    Map<String, Integer> poNumToStatus = new HashMap<String, Integer>();
 	    
         String mimeType= URLConnection.guessContentTypeFromName(toFile.getName());
 		try{

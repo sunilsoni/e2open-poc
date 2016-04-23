@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.jci.domain.Item;
@@ -108,7 +107,7 @@ public class MultiDatasource {
          	   vendor.setVendAddr(vendAddr);
          	   
          	  // System.out.println("po--->"+po);
-         	   poRepository.save(po);
+         	  // poRepository.save(po);
          	   
         	}
         }catch(Exception e){

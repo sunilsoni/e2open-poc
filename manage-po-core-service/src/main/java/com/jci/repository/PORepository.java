@@ -6,17 +6,17 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.jci.domain.PO;
+import com.jci.domain.E2Open;
 
 @Repository
-public interface PORepository extends CrudRepository<PO,Long>{
+public interface PORepository extends CrudRepository<E2Open,Long>{
 	
-	Iterable<PO> findByIdIn(Collection<Long> ids);
+	Iterable<E2Open> findByIdIn(Collection<Long> ids);
 	
 	//Iterable<PO> findByPoNumIn(Collection<Long> ids);
 	
-	List<PO> findByPoNumIn(List<Integer> poNum);
+	List<E2Open> findByOrderNumberIn(List<String> orderNumber);
 	
-	List<PO> findByStatusIn(List<Integer> status);
+	List<E2Open> findByStatusIn(List<Integer> status);
 	
 }

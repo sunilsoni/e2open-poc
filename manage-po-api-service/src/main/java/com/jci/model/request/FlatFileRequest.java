@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_DEFAULT)
 public class FlatFileRequest {
 
-	private List<Integer> poNums =   null;
+	private List<String> poNums =   null;
 
-	public List<Integer> getPoNums() {
+	public List<String> getPoNums() {
 		return poNums;
 	}
 
-	public void setPoNums(List<Integer> poNums) {
+	public void setPoNums(List<String> poNums) {
 		this.poNums = poNums;
 	}
 

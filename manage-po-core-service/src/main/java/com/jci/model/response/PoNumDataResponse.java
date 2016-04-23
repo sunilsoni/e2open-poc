@@ -8,7 +8,7 @@ public class PoNumDataResponse {
 	private List<String> lines;
 	private String errorMsg;
 	private String fileName;
-	private Integer poNum;
+	private String poNum;
 	
 	public boolean isError() {
 		return isError;
@@ -34,10 +34,10 @@ public class PoNumDataResponse {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public Integer getPoNum() {
+	public String getPoNum() {
 		return poNum;
 	}
-	public void setPoNum(Integer poNum) {
+	public void setPoNum(String poNum) {
 		this.poNum = poNum;
 	}
 	

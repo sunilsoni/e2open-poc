@@ -3,9 +3,9 @@ package com.jci.model;
 public class PoDetails {
 
 	private Long poId;
-	private int poNum;
+	private String poNum;
 	private String poDesc;
-	private int dataSource;
+	private String dataSource;
 	private int status;
 	public Long getPoId() {
 		return poId;
@@ -13,10 +13,12 @@ public class PoDetails {
 	public void setPoId(Long poId) {
 		this.poId = poId;
 	}
-	public int getPoNum() {
+
+
+	public String getPoNum() {
 		return poNum;
 	}
-	public void setPoNum(int poNum) {
+	public void setPoNum(String poNum) {
 		this.poNum = poNum;
 	}
 	public String getPoDesc() {
@@ -25,10 +27,12 @@ public class PoDetails {
 	public void setPoDesc(String poDesc) {
 		this.poDesc = poDesc;
 	}
-	public int getDataSource() {
+
+
+	public String getDataSource() {
 		return dataSource;
 	}
-	public void setDataSource(int dataSource) {
+	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
 	}
 	public int getStatus() {
@@ -37,16 +41,7 @@ public class PoDetails {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + dataSource;
-		result = prime * result + ((poId == null) ? 0 : poId.hashCode());
-		result = prime * result + poNum;
-		result = prime * result + status;
-		return result;
-	}
+	 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -93,7 +93,7 @@ function pullPoData() {
 }; //pullPoData
 
 $("#myGrid").on('click', ".checkbox-button", function() {
-    debugger;
+    //debugger;
     console.log('checkbox value: ' + this.value);
     var name = this.name.split('_');
     var poNumber = name[1];
@@ -208,7 +208,7 @@ function processPoData() {
 }; //processPoData
 
 function updateGrid(processedServerResponse) {
-    debugger;
+   // debugger;
     //re-prepare the data based on server response
     for(psrIdx in processedServerResponse){
         for(dgIdx in dataGlobal){
