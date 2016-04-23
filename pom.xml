@@ -15,7 +15,7 @@
         <module>discovery-server</module>
 		<module>manage-po-core-service</module>
 		<module>manage-po-api-service</module>		
-		<module>monitor-dashboard</module>
+		
     </modules>
 
     <parent>
