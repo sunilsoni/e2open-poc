@@ -57,14 +57,25 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <plugin>
+                <!-- <plugin>
                     <groupId>com.spotify</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
                     <version>0.2.9</version>
                     <configuration>
                         <skipDockerBuild>true</skipDockerBuild>
                     </configuration>
-                </plugin>
+                </plugin> -->
+                 <plugin>
+			      <groupId>com.heroku.sdk</groupId>
+			      <artifactId>heroku-maven-plugin</artifactId>
+			      <version>1.0.0</version>
+			      <configuration>
+			       <appName>e2open-poc</appName>
+			        <processTypes>
+			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+			        </processTypes>
+			      </configuration>
+			    </plugin>
             </plugins>
         </pluginManagement>
     </build>
