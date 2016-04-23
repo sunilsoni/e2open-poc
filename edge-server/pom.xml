@@ -49,7 +49,7 @@
 			      <artifactId>heroku-maven-plugin</artifactId>
 			      <version>1.0.0</version>
 			      <configuration>
-			        <appName>${heroku.appName}</appName>
+			        <appName>edge-server</appName>
 			        <processTypes>
 			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
 			        </processTypes>
