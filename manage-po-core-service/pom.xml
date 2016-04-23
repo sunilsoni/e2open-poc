@@ -102,8 +102,18 @@
 
     <build> <pluginManagement>
         <plugins>
-       
-            <plugin>
+          	 <plugin>
+			      <groupId>com.heroku.sdk</groupId>
+			      <artifactId>heroku-maven-plugin</artifactId>
+			      <version>1.0.0</version>
+			      <configuration>
+			        <appName>${heroku.appName}</appName>
+			        <processTypes>
+			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+			        </processTypes>
+			      </configuration>
+			    </plugin>
+           <!--  <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <configuration>
@@ -118,7 +128,7 @@
                         </resource>
                     </resources>
                 </configuration>
-            </plugin>
+            </plugin> -->
             
             <!-- <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
