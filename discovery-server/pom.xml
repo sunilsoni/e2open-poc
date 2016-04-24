@@ -45,17 +45,18 @@
 			      <configuration>
 			        <appName>discovery-server</appName>
 			        <processTypes>
-			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+			         <!--  <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web> -->
+			          <web>java -jar target/discovery-server-1.0.0-SNAPSHOT.jar</web>
 			        </processTypes>
 			      </configuration>
 			    </plugin>
-            <plugin>
+             <plugin>
 			      <groupId>com.heroku.sdk</groupId>
 			      <artifactId>heroku-maven-plugin</artifactId>
 			      <version>1.0.0</version>
 			      <configuration>
-			       <!--  <appName>${heroku.appName}</appName> -->
-			       <appName>sample-config-server</appName>
+			        <appName>${heroku.appName}</appName>
+			       <appName>discovery-server</appName>
 			        <processTypes>
 			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
 			        </processTypes>

@@ -47,11 +47,12 @@
 			       <!--  <appName>${heroku.appName}</appName> -->
 			       <appName>sample-config-server</appName>
 			        <processTypes>
-			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+			           <!-- <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>  -->
+			          <web>java -jar target/sample-config-server-0.0.1-SNAPSHOT.jar</web> 
 			        </processTypes>
 			      </configuration>
 			    </plugin>
-			         <plugin>
+			 <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
@@ -72,7 +73,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>  
         </plugins>
     </build>
 
