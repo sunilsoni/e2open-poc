@@ -49,22 +49,27 @@
 			        </processTypes>
 			      </configuration>
 			    </plugin>
-            <!-- <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
+            <plugin>
+			      <groupId>com.heroku.sdk</groupId>
+			      <artifactId>heroku-maven-plugin</artifactId>
+			      <version>1.0.0</version>
+			      <configuration>
+			       <!--  <appName>${heroku.appName}</appName> -->
+			       <appName>sample-config-server</appName>
+			        <processTypes>
+			          <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+			        </processTypes>
+			      </configuration>
+			    </plugin>
+			         <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <imageName>${project.name}:${project.version}</imageName>
-                    <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-                    <skipDockerBuild>false</skipDockerBuild>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
+                    <warName>${project.artifactId}</warName>
                 </configuration>
-            </plugin> -->
+            </plugin>
         </plugins>
     </build>
 </project>

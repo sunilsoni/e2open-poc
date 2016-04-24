@@ -14,8 +14,7 @@
         <module>sample-config-server</module>
         <module>discovery-server</module>
 		<module>manage-po-core-service</module>
-		<module>manage-po-api-service</module>		
-		
+		<module>manage-po-api-service</module>	
     </modules>
 
     <parent>
